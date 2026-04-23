@@ -33,6 +33,48 @@ Executa tests de mòduls Odoo/Som Energia utilitzant `destral`.
 dodestral test_erp -m som_polissa
 ```
 
+### git-commit
+
+Crea commits seguint Conventional Commits amb emoji.
+
+**Format:** `<emoji> <type>: <description>`
+
+**Tipus:**
+- `feat` (✨) - Nova funcionalitat
+- `fix` (🐛) - Bug fix
+- `refactor` (♻️) - Refactorització
+- `perf` (⚡) - Millora de rendiment
+- `test` (✅) - Tests
+- `docs` (📖) - Documentació
+- `style` (💄) - Estil
+- `chore` (🔧) - Manteniment
+
+**Ús:**
+```bash
+git commit -m "✨ feat: add user authentication"
+```
+
+### git-branch
+
+Crea branques seguint convencions de naming.
+
+**Format:** `<TYPE>_<description>`
+
+**Tipus:**
+- `ADD_` - Nova funcionalitat
+- `IMP_` - Millora
+- `FIX_` - Bug fix
+- `MOD_` - Canvi de comportament
+- `REF_` - Refactorització
+- `TEST_` - Tests
+- `DOCS_` - Documentació
+- `CI_` - CI/CD
+
+**Ús:**
+```bash
+git checkout -b ADD_user_registration
+```
+
 ## Contribuir
 
 1. Fes un fork del repo
