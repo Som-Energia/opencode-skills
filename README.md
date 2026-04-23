@@ -75,6 +75,22 @@ Crea branques seguint convencions de naming.
 git checkout -b ADD_user_registration
 ```
 
+### git-pr
+
+Crea Pull Requests seguint la plantilla de Som Energia.
+
+**Format:** Plantilla en català amb:
+- Objectiu
+- Targeta/Incidència
+- Comportament antic
+- Comportament nou
+- Comprovacions
+
+**Ús:**
+```bash
+gh pr create --title "ADD_user_registration" --body "..."
+```
+
 ## Contribuir
 
 1. Fes un fork del repo
