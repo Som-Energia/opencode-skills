@@ -1,9 +1,9 @@
 ---
 name: erp-test
 description: >
-  Ejecuta tests de módulos Odoo/Som Energia usando destral.
-  Automatiza: verificar contenedores, activar pyenv, ejecutar dodestral.
-  Trigger: Cuando necesitas ejecutar tests de un módulo Odoo con destral.
+  Executa tests de mòduls Odoo/Som Energia utilitzant destral.
+  Automatitza: verificar contenidors, activar pyenv, executar dodestral.
+  Trigger: Quan necessites executar tests d'un mòdul Odoo amb destral.
 metadata:
   author: oriol
   version: "1.0"
@@ -11,46 +11,46 @@ metadata:
 
 ## When to Use
 
-Usá este skill cuando:
-- Necesitás ejecutar tests de un módulo Odoo del proyecto
-- Querés automatizar el workflow de testing local
-- Estás desarrollando un módulo y necesitás TDD
+Utilitza aquesta skill quan:
+- Necessites executar tests d'un mòdul Odoo del projecte
+- Vols automatitzar el workflow de testing local
+- Estàs desenvolupant un mòdul i necessites TDD
 
-## Configuración Requerida
+## Configuració Requerida
 
-Este skill requiere:
-1. **Contenedores Docker**: Solo PostgreSQL, MongoDB, Redis (Odoo corre en el host)
-2. **pyenv**: Entorno virtual con nombre `erp` (`pyenv virtualenv erp`)
-3. **Odoo instalado en host**: En `/home/oriol/somenergia/src/erp/server/bin`
+Aquesta skill requereix:
+1. **Contenidors Docker**: Només PostgreSQL, MongoDB, Redis (Odoo corre al host)
+2. **pyenv**: Entorn virtual amb nom `erp` (`pyenv virtualenv erp`)
+3. **Odoo instal·lat al host**: A `/home/oriol/somenergia/src/erp/server/bin`
 
 ## Workflow
 
-### Paso 1: Verificar Contenedores (solo BBDD)
+### Pas 1: Verificar Contenidors (només BBDD)
 
 ```bash
 docker ps --format "{{.Names}}" | grep -E "postgres|redis|mongo"
 ```
 
-Contenedores esperados:
+Contenidors esperats:
 - PostgreSQL (src_db_1)
 - MongoDB (src_mongo_1)
 - Redis (src_redis_1)
-- Odoo NO está en Docker — corre en el host
+- Odoo NO està a Docker — corre al host
 
-### Paso 2: Activar pyenv
+### Pas 2: Activar pyenv
 
 ```bash
 pyenv activate erp
 ```
 
-O si está configurado con pyenv-virtualenv:
+O si està configurat amb pyenv-virtualenv:
 ```bash
 source $(pyenv which activate)
 ```
 
-### Paso 3: Variables de Entorno
+### Pas 3: Variables d'Entorn
 
-Setear según el workflow de GitHub Actions:
+Configurar segons el workflow de GitHub Actions:
 
 ```bash
 export PYTHONPATH=/home/oriol/somenergia/src/erp/server/bin:/home/oriol/somenergia/src/erp/server/bin/addons
@@ -63,34 +63,34 @@ export OPENERP_MONGODB_HOST=localhost
 export OPENERP_REDIS_URL=redis://localhost:6379/0
 ```
 
-### Paso 4: Ejecutar destral
+### Pas 4: Executar destral
 
 ```bash
 dodestral <database> -m <module_name>
 ```
 
-**Ejemplo**:
+**Exemple**:
 ```bash
 dodestral test_som_polissa -m som_polissa
 ```
 
-O con opciones adicionales:
+O amb opcions adicionals:
 ```bash
 destral --report-coverage test_som_polissa -m som_polissa
 ```
 
 ## Usage
 
-### Ejecución Básica
+### Execució Bàsica
 
 ```bash
-# Activar entorno y ejecutar tests
+# Activar entorn i executar tests
 pyenv activate erp && dodestral test_db -m som_polissa
 ```
 
-### Script Wrapper Recomendado
+### Script Wrapper Recomanat
 
-Crear un script en `~/bin/run-erp-test`:
+Crear un script a `~/bin/run-erp-test`:
 
 ```bash
 #!/bin/bash
@@ -99,15 +99,15 @@ set -e
 MODULE=${1:-som_polissa}
 DB_NAME=${2:-test_erp}
 
-# Verificar contenedores
-echo "=== Verificando contenedores ==="
+# Verificar contenidors
+echo "=== Verificant contenidors ==="
 docker ps --format "{{.Names}}" | grep -E "postgres|redis|mongo" || {
-    echo "ERROR: Contenedores no corriendo. Ejecutá 'dockererp' primero."
+    echo "ERROR: Contenidors no corrent. Executa 'docker-compose up -d' primer."
     exit 1
 }
 
 # Activar pyenv
-echo "=== Activando entorno erp ==="
+echo "=== Activant entorn erp ==="
 eval "$(pyenv init -)"
 pyenv activate erp
 
@@ -121,26 +121,26 @@ export OPENERP_DB_PASSWORD=erp
 export OPENERP_MONGODB_HOST=localhost
 export OPENERP_REDIS_URL=redis://localhost:6379/0
 
-# Ejecutar tests
-echo "=== Ejecutando tests de $MODULE ==="
+# Executar tests
+echo "=== Executant tests de $MODULE ==="
 dodestral $DB_NAME -m $MODULE
 ```
 
-## Errores Comunes
+## Errors Comuns
 
-| Error | Causa | Solución |
+| Error | Causa | Solució |
 |-------|-------|----------|
-| `destral: command not found` | pyenv no activado | `pyenv activate erp` |
-| `Connection refused to localhost:5432` | PostgreSQL no corriendo | `docker-compose up -d` (en dir de BBDDs) |
-| `Connection refused to localhost:27017` | MongoDB no corriendo | `docker-compose up -d` |
-| `Connection refused to localhost:6379` | Redis no corriendo | `docker-compose up -d` |
-| `Database does not exist` | DB no creada | destral la crea automáticamente |
-| `timeout` | Tests muy lentos | Los tests de Odoo pueden tomar 10+ min |
+| `destral: command not found` | pyenv no activat | `pyenv activate erp` |
+| `Connection refused to localhost:5432` | PostgreSQL no corrent | `docker-compose up -d` (al directori de BBDDs) |
+| `Connection refused to localhost:27017` | MongoDB no corrent | `docker-compose up -d` |
+| `Connection refused to localhost:6379` | Redis no corrent | `docker-compose up -d` |
+| `Database does not exist` | DB no creada | destral la crea automàticament |
+| `timeout` | Tests molt lents | Els tests d'Odoo poden trigar 10+ min |
 
-## Integración con SDD
+## Integració amb SDD
 
-Este skill se usa en las fases:
-- `sdd-apply`: Para verificar que el código implementado pasa los tests
-- `sdd-verify`: Para validar contra specs
+Aquesta skill s'utilitza a les fases:
+- `sdd-apply`: Per verificar que el codi implementat passa els tests
+- `sdd-verify`: Per validar contra specs
 
-El test runner detectado es: `dodestral` (custom Odoo test runner)
+El test runner detectat és: `dodestral` (custom Odoo test runner)
